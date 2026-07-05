@@ -3,5 +3,10 @@ package github.MaxBr221.repository;
 import github.MaxBr221.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsuarioRepository extends JpaRepository<Long, Usuario> {
+import java.util.Optional;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Optional<Usuario> findByLogin(String login);
+    Boolean existsByLogin(String login);
+
 }
