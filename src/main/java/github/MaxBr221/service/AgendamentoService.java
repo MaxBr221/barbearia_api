@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -67,28 +68,30 @@ public class AgendamentoService {
         Agendamento agendamento  = agendamentoRepository.findById(id)
                 .orElseThrow(()-> new EventFullException("Agendamento não existente!"));
 
-        if(!agendamentoRepository.existsServicoById(agendamentoRequestDTO.idServico())){
-            throw new EventFullException("Serviço não disponivel no momento!");
-        }
-        boolean agendamentoNessaData = agendamentoRepository.findByData(agendamentoRequestDTO.data());
-        Barbeiro barbeiro = agendamentoRepository.findBarbeiroById(agendamentoRequestDTO.idBarbeiro());
-        if(barbeiro.){
-
-            //continuar dps
-            if(agendamentoNessaData){
-                throw new EventFullException("Já existe agendamento marcado nesse horário!");
-            }
-        }
-
         if(!agendamento.getStatusAgendamento().equals(StatusAgendamento.RESERVADO) && agendamento.getStatusAgendamento().equals(StatusAgendamento.EM_ESPERA)){
             throw new EventFullException("Você não pode editar agendamento que esteja AGENDADO, FINALIZADO ou CANCELADO!");
         }
-
-
+        if(!agendamentoRepository.existsServicoById(agendamentoRequestDTO.idServico())){
+            throw new EventFullException("Serviço não disponivel no momento!");
+        }
+        verificaExistenciaBarbeiro(agendamentoRequestDTO.idBarbeiro());
+        verificaDataAgendamento(agendamentoRequestDTO.data());
 
         Agendamento agendamentoAtualizado = new Agendamento();
         BeanUtils.copyProperties(agendamentoRequestDTO, agendamentoAtualizado);
         Agendamento agendamentoSalvo = agendamentoRepository.save(agendamentoAtualizado);
         return new AgendamentoResponseDTO(agendamentoSalvo);
+    }
+    private void verificaDataAgendamento(LocalDateTime data){
+        boolean agendamentoNessaData = agendamentoRepository.findByData(data);
+        if(agendamentoNessaData){
+            throw new EventFullException("Já existe agendamento marcado nesse horário!");
+        }
+    }
+    private void verificaExistenciaBarbeiro(Long id){
+        boolean barbeiro = agendamentoRepository.findBarbeiroById(id);
+        if(!barbeiro) {
+            throw new EventFullException("Barbeiro não encotrado!");
+        }
     }
 }
