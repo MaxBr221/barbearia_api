@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
-    Boolean findByData(LocalDateTime data);
+    boolean findByData(LocalDateTime data);
     boolean findBarbeiroById(Long id);
     boolean existsServicoById(Long id);
 }

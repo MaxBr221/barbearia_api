@@ -4,6 +4,7 @@ import github.MaxBr221.dtos.agendamento.AgendamentoRequestDTO;
 import github.MaxBr221.dtos.agendamento.AgendamentoResponseDTO;
 import github.MaxBr221.exception.EventFullException;
 import github.MaxBr221.model.Agendamento;
+import github.MaxBr221.model.Barbeiro;
 import github.MaxBr221.model.StatusAgendamento;
 import github.MaxBr221.repository.AgendamentoRepository;
 import github.MaxBr221.repository.BarbeiroRepository;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -41,5 +44,51 @@ public class AgendamentoService {
 
         return new AgendamentoResponseDTO(agendamentoSalvo);
 
+    }
+    public void delete(Long id){
+        Agendamento agendamento  = agendamentoRepository.findById(id)
+                .orElseThrow(()-> new EventFullException("Agendamento não existente!"));
+        agendamentoRepository.delete(agendamento);
+
+    }
+    public AgendamentoResponseDTO findById(Long id){
+        Agendamento agendamento  = agendamentoRepository.findById(id)
+                .orElseThrow(()-> new EventFullException("Agendamento não existente!"));
+
+        return new AgendamentoResponseDTO(agendamento);
+    }
+    public List<AgendamentoResponseDTO> findAll(){
+        return agendamentoRepository.findAll()
+                .stream()
+                .map(agendamento -> new AgendamentoResponseDTO(agendamento))
+                .toList();
+    }
+    public AgendamentoResponseDTO update(Long id, AgendamentoRequestDTO agendamentoRequestDTO){
+        Agendamento agendamento  = agendamentoRepository.findById(id)
+                .orElseThrow(()-> new EventFullException("Agendamento não existente!"));
+
+        if(!agendamentoRepository.existsServicoById(agendamentoRequestDTO.idServico())){
+            throw new EventFullException("Serviço não disponivel no momento!");
+        }
+        boolean agendamentoNessaData = agendamentoRepository.findByData(agendamentoRequestDTO.data());
+        Barbeiro barbeiro = agendamentoRepository.findBarbeiroById(agendamentoRequestDTO.idBarbeiro());
+        if(barbeiro.){
+
+            //continuar dps
+            if(agendamentoNessaData){
+                throw new EventFullException("Já existe agendamento marcado nesse horário!");
+            }
+        }
+
+        if(!agendamento.getStatusAgendamento().equals(StatusAgendamento.RESERVADO) && agendamento.getStatusAgendamento().equals(StatusAgendamento.EM_ESPERA)){
+            throw new EventFullException("Você não pode editar agendamento que esteja AGENDADO, FINALIZADO ou CANCELADO!");
+        }
+
+
+
+        Agendamento agendamentoAtualizado = new Agendamento();
+        BeanUtils.copyProperties(agendamentoRequestDTO, agendamentoAtualizado);
+        Agendamento agendamentoSalvo = agendamentoRepository.save(agendamentoAtualizado);
+        return new AgendamentoResponseDTO(agendamentoSalvo);
     }
 }
