@@ -4,7 +4,6 @@ import github.MaxBr221.dtos.agendamento.AgendamentoRequestDTO;
 import github.MaxBr221.dtos.agendamento.AgendamentoResponseDTO;
 import github.MaxBr221.exception.EventFullException;
 import github.MaxBr221.model.Agendamento;
-import github.MaxBr221.model.Barbeiro;
 import github.MaxBr221.model.StatusAgendamento;
 import github.MaxBr221.repository.AgendamentoRepository;
 import github.MaxBr221.repository.BarbeiroRepository;
@@ -13,9 +12,12 @@ import github.MaxBr221.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Slf4j
@@ -93,5 +95,16 @@ public class AgendamentoService {
         if(!barbeiro) {
             throw new EventFullException("Barbeiro não encotrado!");
         }
+    }
+    public List<AgendamentoResponseDTO> listarAgendamentosDeHoje(){
+        LocalDate hoje = LocalDate.now();
+
+        LocalDateTime inicio = hoje.atStartOfDay();
+        LocalDateTime fim = hoje.atTime(LocalTime.MAX);
+        List<Agendamento> agendamentosDeHoje = agendamentoRepository.findByDataHoraIncioBetween(inicio, fim);
+        return agendamentoRepository.findAll()
+                .stream()
+                .map(agendamentos -> new AgendamentoResponseDTO((Agendamento) agendamentosDeHoje))
+                .toList();
     }
 }
