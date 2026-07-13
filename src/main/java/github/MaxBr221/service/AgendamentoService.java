@@ -107,4 +107,18 @@ public class AgendamentoService {
                 .map(agendamentos -> new AgendamentoResponseDTO((Agendamento) agendamentosDeHoje))
                 .toList();
     }
+    public List<AgendamentoResponseDTO> agendamentosAtivos(){
+        return agendamentoRepository
+                .findByStatus(StatusAgendamento.AGENDADO)
+                .stream()
+                .map(agendamento -> new AgendamentoResponseDTO(agendamento))
+                .toList();
+    }
+    public List<ClienteFrequencia> clientesMaisFrequentes(){
+        return agendamentoRepository.usuariosMaisFrequentes()
+                .stream()
+                .map(usuarios-> new ClienteFrequencia(usuarios))
+                .toList();
+
+    }
 }
