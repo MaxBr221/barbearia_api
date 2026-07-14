@@ -26,14 +26,14 @@ public class ServicoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         servicoService.delete(id);
         log.info("Servico deletado!");
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{idServico}")
-    public ResponseEntity<ServicoResponseDTO> findById(Long id){
+    public ResponseEntity<ServicoResponseDTO> findById(@PathVariable Long id){
         ServicoResponseDTO servicoBuscado = servicoService.findById(id);
         log.info("Buscando servico!");
         return ResponseEntity.ok(servicoBuscado);
@@ -47,7 +47,7 @@ public class ServicoController {
     }
 
     @PutMapping
-    public ResponseEntity<ServicoResponseDTO> update (Long id, ServicoRequestDTO servicoRequestDTO){
+    public ResponseEntity<ServicoResponseDTO> update (@PathVariable Long id,@RequestBody ServicoRequestDTO servicoRequestDTO){
         ServicoResponseDTO servicoUpdate = servicoService.update(id, servicoRequestDTO);
         log.info("Editando serviço!");
         return ResponseEntity.ok(servicoUpdate);

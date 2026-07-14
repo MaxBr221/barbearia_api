@@ -17,6 +17,7 @@ public class UsuarioService {
 
     private UsuarioRepository usuarioRepository;
 
+    //não vai precisa desse logo logo
     public UsuarioResponseDTO create(UsuarioResquestDTO userDTO){
         if(usuarioRepository.existsByLogin(userDTO.login())){
             throw new EventFullException("Usuário com login já existente!");

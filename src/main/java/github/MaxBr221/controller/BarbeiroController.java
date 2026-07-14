@@ -19,26 +19,26 @@ public class BarbeiroController {
     private BarbeiroService barbeiroService;
 
     @PostMapping
-    public ResponseEntity<BarbeiroResponseDTO> create(BarbeiroRequestDTO barbeiroRequestDTO){
+    public ResponseEntity<BarbeiroResponseDTO> create(@RequestBody BarbeiroRequestDTO barbeiroRequestDTO){
         BarbeiroResponseDTO barbeiro = barbeiroService.create(barbeiroRequestDTO);
         log.info("Salvando barbeiro {}", barbeiro.nome());
         return ResponseEntity.status(HttpStatus.CREATED).body(barbeiro);
     }
     @DeleteMapping
-    public ResponseEntity<Void> delete(Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         barbeiroService.delete(id);
         log.info("Barbeiro apagado com sucesso!");
         return ResponseEntity.noContent().build();
 
     }
     @PutMapping
-    public ResponseEntity<BarbeiroResponseDTO> update(Long id, BarbeiroRequestDTO barbeiroRequestDTO){
+    public ResponseEntity<BarbeiroResponseDTO> update(@PathVariable Long id, @RequestBody BarbeiroRequestDTO barbeiroRequestDTO){
         BarbeiroResponseDTO barbeiroUpdate = barbeiroService.update(id, barbeiroRequestDTO);
         log.info("Barbeiro de id {} editado com sucesso!", barbeiroUpdate.id());
         return ResponseEntity.ok(barbeiroUpdate);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<BarbeiroResponseDTO> findById(Long id){
+    public ResponseEntity<BarbeiroResponseDTO> findById(@PathVariable Long id){
         BarbeiroResponseDTO barbeiroBuscado = barbeiroService.findById(id);
         log.info("Barbeiro {} buscado com sucesso!", barbeiroBuscado.nome());
         return ResponseEntity.ok(barbeiroBuscado);

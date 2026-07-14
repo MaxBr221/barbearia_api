@@ -2,6 +2,7 @@ package github.MaxBr221.controller;
 
 import github.MaxBr221.dtos.agendamento.AgendamentoRequestDTO;
 import github.MaxBr221.dtos.agendamento.AgendamentoResponseDTO;
+import github.MaxBr221.dtos.usuario.ClienteFrequencia;
 import github.MaxBr221.service.AgendamentoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,4 +49,23 @@ public class AgendamentoController {
         log.info("Editado agendamento");
         return ResponseEntity.ok(agendamentoResponseDTO);
     }
+    @GetMapping("/{hoje}")
+    public ResponseEntity<List<AgendamentoResponseDTO>> agendamentosDeHoje(){
+        List<AgendamentoResponseDTO> agendamentos = agendamentoService.listarAgendamentosDeHoje();
+        log.info("Listando agendamentos de hoje!");
+        return ResponseEntity.ok(agendamentos);
+    }
+    @GetMapping("/{ativos}")
+    public ResponseEntity<List<AgendamentoResponseDTO>> agendamentosAtivos(){
+        List<AgendamentoResponseDTO> agendamentosAtivos = agendamentoService.agendamentosAtivos();
+        log.info("Listando todos os agendamentos ativos!");
+        return ResponseEntity.ok(agendamentosAtivos);
+    }
+    @GetMapping("/{clientes}")
+    public ResponseEntity<List<ClienteFrequencia>> clientesMaisFrequentes(){
+        List<ClienteFrequencia> clientesFrequentes = agendamentoService.clientesMaisFrequentes();
+        log.info("Listando clientes mais frequentes");
+        return ResponseEntity.ok(clientesFrequentes);
+    }
+
 }

@@ -1,12 +1,19 @@
 package github.MaxBr221.model;
 
-import github.MaxBr221.dtos.usuario.UsuarioResquestDTO;
+import github.MaxBr221.dtos.auth.Cadastro;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 
 @Getter
@@ -15,9 +22,9 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 @Table(name = "usuario")
 @NoArgsConstructor
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String nome;
@@ -27,10 +34,37 @@ public class Usuario {
     private String senha;
     @Column(nullable = false)
     private String telefone;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public Usuario(UsuarioResquestDTO usuarioResquestDTO){
-        BeanUtils.copyProperties(usuarioResquestDTO, this);
+    public Usuario(Cadastro cadastro){
+        BeanUtils.copyProperties(cadastro, this);
     }
 
+    public Usuario(String nome, String login, String senha, String telefone, Role role) {
+        this.nome = nome;
+        this.login = login;
+        this.senha = senha;
+        this.telefone = telefone;
+        this.role = role;
+    }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(role.equals(Role.ADMIN)){
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        }else{
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return nome;
+    }
 }

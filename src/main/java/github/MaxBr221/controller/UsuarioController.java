@@ -25,19 +25,19 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
     @DeleteMapping
-    public ResponseEntity<Void> delete(Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         usuarioService.delete(id);
         log.info("Deletando usuário!");
         return ResponseEntity.noContent().build();
     }
     @PutMapping
-    public ResponseEntity<UsuarioResponseDTO> update(Long id, UsuarioResquestDTO usuarioResquestDTO){
+    public ResponseEntity<UsuarioResponseDTO> update(@PathVariable Long id,@RequestBody UsuarioResquestDTO usuarioResquestDTO){
         UsuarioResponseDTO usuarioUpdate = usuarioService.update(id, usuarioResquestDTO);
         log.info("Atualizando usuário do id {}", usuarioUpdate.id());
         return ResponseEntity.ok(usuarioUpdate);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> findById(Long id){
+    public ResponseEntity<UsuarioResponseDTO> findById(@PathVariable Long id){
         UsuarioResponseDTO usuarioBuscado = usuarioService.findById(id);
         log.info("Usuário buscado {} buscado com sucesso!", usuarioBuscado.nome());
         return ResponseEntity.ok(usuarioBuscado);
