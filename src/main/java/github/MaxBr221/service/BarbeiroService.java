@@ -53,4 +53,27 @@ public class BarbeiroService {
         return new BarbeiroResponseDTO(barbeiroSalvo);
     }
 
+    public List<AgendamentoResponseDTO> agendamentosDoDia(Long idBarbeiro, LocalDate dia){
+        Barbeiro barbeiro = barbeiroRepository.findById(idBarbeiro)
+                .orElseThrow(()-> new EventFullException("Barbeiro não existente!"));
+
+        if(!agendamentoRepository.findBarbeiroById(barbeiro.getId())){
+            throw new EventFullException("Barbeiro não tem agendamento ainda!");
+        }
+
+        LocalDateTime inicio = dia.atStartOfDay();
+        LocalDateTime fim = dia.atTime(LocalTime.MAX);
+
+        List<Agendamento> agendamentos = agendamentoRepository.findByBarbeiroIdAndDataHoraInicioBetween(idBarbeiro, inicio, fim);
+        if(agendamentos.isEmpty()){
+            throw new EventFullException("Não existe agendamentos nesse dia!");
+        }
+
+        return agendamentos
+                .stream()
+                .map(agendamento -> new AgendamentoResponseDTO(agendamento))
+                .toList();
+
+    }
+
 }
