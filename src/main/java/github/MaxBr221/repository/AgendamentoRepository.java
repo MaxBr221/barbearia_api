@@ -6,12 +6,15 @@ import github.MaxBr221.model.StatusAgendamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
     boolean findByData(LocalDateTime data);
+    List<Agendamento> findByBarbeiroIdAndDataHoraInicioBetween(Long idBarbeiro, LocalDateTime incio, LocalDateTime fim);
+    List<Agendamento> findAllByUsuarioId(Long idUser);
     boolean findBarbeiroById(Long id);
     boolean existsServicoById(Long id);
     List<Agendamento> findByDataHoraIncioBetween(LocalDateTime inicio, LocalDateTime fim);

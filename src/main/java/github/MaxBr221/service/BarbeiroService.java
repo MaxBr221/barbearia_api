@@ -1,20 +1,27 @@
 package github.MaxBr221.service;
 
+import github.MaxBr221.dtos.agendamento.AgendamentoResponseDTO;
 import github.MaxBr221.dtos.barbeiro.BarbeiroRequestDTO;
 import github.MaxBr221.dtos.barbeiro.BarbeiroResponseDTO;
 import github.MaxBr221.exception.EventFullException;
+import github.MaxBr221.model.Agendamento;
 import github.MaxBr221.model.Barbeiro;
+import github.MaxBr221.repository.AgendamentoRepository;
 import github.MaxBr221.repository.BarbeiroRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BarbeiroService {
     private BarbeiroRepository barbeiroRepository;
+    private AgendamentoRepository agendamentoRepository;
 
     public BarbeiroResponseDTO create(BarbeiroRequestDTO barbeiroDTO){
         if(barbeiroRepository.existsByLogin(barbeiroDTO.login())){

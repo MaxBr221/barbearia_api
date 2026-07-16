@@ -1,9 +1,12 @@
 package github.MaxBr221.service;
 
+import github.MaxBr221.dtos.agendamento.AgendamentoResponseDTO;
 import github.MaxBr221.dtos.usuario.UsuarioResponseDTO;
 import github.MaxBr221.dtos.usuario.UsuarioResquestDTO;
 import github.MaxBr221.exception.EventFullException;
+import github.MaxBr221.model.Agendamento;
 import github.MaxBr221.model.Usuario;
+import github.MaxBr221.repository.AgendamentoRepository;
 import github.MaxBr221.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -14,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
-
+    private AgendamentoRepository agendamentoRepository;
     private UsuarioRepository usuarioRepository;
 
     //não vai precisa desse logo logo
@@ -52,5 +55,18 @@ public class UsuarioService {
         BeanUtils.copyProperties(userDTO, usuario);
         Usuario userSalvo = usuarioRepository.save(usuario);
         return new UsuarioResponseDTO(userSalvo);
+    }
+    public List<AgendamentoResponseDTO> listarHistorico(Long idUser){
+        Usuario usuario = usuarioRepository.findById(idUser)
+                .orElseThrow(()-> new EventFullException("Usuário não existente!"));
+        List<Agendamento> historico = agendamentoRepository.findAllByUsuarioId(idUser);
+
+        if(historico.isEmpty()){
+            throw new EventFullException("Usuário não agendou nenhum serviço!");
+        }
+        return historico
+                .stream()
+                .map(historicos -> new AgendamentoResponseDTO(historicos))
+                .toList();
     }
 }
