@@ -17,7 +17,7 @@ public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "data_agendamento")
     private LocalDateTime data;
     @Column(nullable = false, name = "user_id")
     private Long idUser;

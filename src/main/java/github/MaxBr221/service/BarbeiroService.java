@@ -71,7 +71,7 @@ public class BarbeiroService {
         LocalDateTime inicio = dia.atStartOfDay();
         LocalDateTime fim = dia.atTime(LocalTime.MAX);
 
-        List<Agendamento> agendamentos = agendamentoRepository.findByBarbeiroIdAndDataHoraInicioBetween(idBarbeiro, inicio, fim);
+        List<Agendamento> agendamentos = agendamentoRepository.findByIdBarbeiroAndDataBetween(idBarbeiro, inicio, fim);
         if(agendamentos.isEmpty()){
             throw new EventFullException("Não existe agendamentos nesse dia!");
         }

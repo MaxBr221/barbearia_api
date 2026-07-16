@@ -99,7 +99,7 @@ public class AgendamentoService {
 
         LocalDateTime inicio = hoje.atStartOfDay();
         LocalDateTime fim = hoje.atTime(LocalTime.MAX);
-        List<Agendamento> agendamentosDeHoje = agendamentoRepository.findByDataHoraIncioBetween(inicio, fim);
+        List<Agendamento> agendamentosDeHoje = agendamentoRepository.findByDataBetween(inicio, fim);
         return agendamentoRepository.findAll()
                 .stream()
                 .map(agendamentos -> new AgendamentoResponseDTO((Agendamento) agendamentosDeHoje))
@@ -107,7 +107,7 @@ public class AgendamentoService {
     }
     public List<AgendamentoResponseDTO> agendamentosAtivos(){
         return agendamentoRepository
-                .findByStatus(StatusAgendamento.AGENDADO)
+                .findBystatusAgendamento(StatusAgendamento.AGENDADO)
                 .stream()
                 .map(agendamento -> new AgendamentoResponseDTO(agendamento))
                 .toList();

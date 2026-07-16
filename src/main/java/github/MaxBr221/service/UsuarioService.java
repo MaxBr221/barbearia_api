@@ -59,7 +59,7 @@ public class UsuarioService {
     public List<AgendamentoResponseDTO> listarHistorico(Long idUser){
         Usuario usuario = usuarioRepository.findById(idUser)
                 .orElseThrow(()-> new EventFullException("Usuário não existente!"));
-        List<Agendamento> historico = agendamentoRepository.findAllByUsuarioId(idUser);
+        List<Agendamento> historico = agendamentoRepository.findAllByidUser(idUser);
 
         if(historico.isEmpty()){
             throw new EventFullException("Usuário não agendou nenhum serviço!");
