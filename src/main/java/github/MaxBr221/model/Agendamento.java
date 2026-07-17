@@ -15,16 +15,19 @@ import java.time.LocalDateTime;
 @Table(name = "agendamento")
 public class Agendamento {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, name = "data_agendamento")
     private LocalDateTime data;
-    @Column(nullable = false, name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long idUser;
-    @Column(nullable = false, name = "barbeiro_id")
+
+    @Column(name = "barbeiro_id", nullable = false)
     private Long idBarbeiro;
-    @Column(nullable = false, name = "servico_id")
+
+    @Column(name = "servico_id", nullable = false)
     private Long idServico;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "status_agendamento")
     private StatusAgendamento statusAgendamento;
 

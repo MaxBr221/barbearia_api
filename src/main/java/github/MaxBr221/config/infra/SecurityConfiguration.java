@@ -34,7 +34,6 @@ public class SecurityConfiguration {
                                 "/agendamento/idAgenda",
                                 "/agendamento",
                                 "/servico/**").permitAll()
-
                         .requestMatchers(HttpMethod.POST,
                                 "/barbeiro/**",
                                 "/servico/**").hasRole("ADMIN")

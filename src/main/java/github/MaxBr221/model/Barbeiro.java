@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Barbeiro {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String nome;
@@ -22,6 +22,7 @@ public class Barbeiro {
     private String login;
     @Column(nullable = false)
     private String senha;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
     @Column(nullable = false)

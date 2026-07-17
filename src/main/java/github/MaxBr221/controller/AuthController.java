@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private AuthService authService;
 
-    @PostMapping("/cadastro)")
+    @PostMapping("/cadastro")
     public ResponseEntity cadastro(@RequestBody Cadastro cadastro){
         authService.cadastrarUsuario(cadastro);
         log.info("Usuário {} cadastrado com sucesso!", cadastro.nome());
